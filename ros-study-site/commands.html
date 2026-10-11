@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ROS / Ubuntu 命令速查字典</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📘%3C/text%3E%3C/svg%3E">
+<script>try{var t=localStorage.getItem('theme')||(window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<style>
+  :root{
+    --bg:#f6f7f9; --panel:#ffffff; --ink:#1f2430; --muted:#6b7280;
+    --line:#e6e8ec; --line2:#eef0f3; --accent:#2563eb; --accent-bg:#eff4ff;
+    --code-bg:#f2f4f7; --hi:#0f766e;
+    --hover:#fafbfc; --btnbg:#ffffff; --topbar:rgba(255,255,255,.92);
+    --lv-h:#dc2626; --lv-h-bg:#fee2e2; --lv-m:#b45309; --lv-m-bg:#fef3c7; --lv-l:#6b7280; --lv-l-bg:#eef0f3;
+    color-scheme:light;
+  }
+  [data-theme="dark"]{
+    --bg:#0f1115; --panel:#171a21; --ink:#e7e9ee; --muted:#97a1b0;
+    --line:#2a2f3a; --line2:#22262f; --accent:#7aa2ff; --accent-bg:#1b2438;
+    --code-bg:#232833; --hi:#4ec9b0;
+    --hover:#1c2129; --btnbg:#232833; --topbar:rgba(18,20,26,.92);
+    --lv-h:#f87171; --lv-h-bg:#3a1f1f; --lv-m:#fbbf24; --lv-m-bg:#3a2f14; --lv-l:#9aa4b2; --lv-l-bg:#242a34;
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;
+    font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  code,kbd,.mono{font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  /* 站点导航条 */
+  .sitenav{background:#111827;color:#e5e7eb;font-size:13px}
+  .sitenav .in{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:20px;padding:10px 20px}
+  .sitenav .logo{font-weight:700;color:#fff}
+  .sitenav .sp{flex:1}
+  .sitenav a{color:#cbd5e1;text-decoration:none;padding:2px 0;border-bottom:2px solid transparent}
+  .sitenav a:hover{color:#fff;text-decoration:none}
+  .sitenav a.active{color:#fff;font-weight:700;border-bottom-color:#fff}
+  .themebtn{background:transparent;border:1px solid #39414f;color:#cbd5e1;border-radius:8px;
+    padding:3px 10px;cursor:pointer;font-size:12.5px;line-height:1.4}
+  .themebtn:hover{border-color:#5b667a;color:#fff}
+
+  /* top bar */
+  .topbar{position:sticky;top:0;z-index:30;background:var(--topbar);backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);padding:12px 20px}
+  .topbar-inner{max-width:1180px;margin:0 auto;display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+  .brand{font-weight:700;font-size:17px;white-space:nowrap}
+  .brand small{display:block;font-weight:400;font-size:11.5px;color:var(--muted);letter-spacing:.02em}
+  .searchwrap{flex:1;min-width:240px;position:relative}
+  #q{width:100%;padding:11px 14px 11px 38px;border:1px solid var(--line);border-radius:10px;
+    font-size:15px;background:var(--btnbg);color:var(--ink);outline:none}
+  #q:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-bg)}
+  .searchwrap::before{content:"🔍";position:absolute;left:12px;top:50%;transform:translateY(-50%);
+    font-size:14px;opacity:.6;pointer-events:none}
+  .meta{font-size:12.5px;color:var(--muted);white-space:nowrap}
+  .meta b{color:var(--accent)}
+
+  /* layout */
+  .layout{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:196px 1fr;gap:24px;padding:20px}
+  .side{position:sticky;top:78px;align-self:start;max-height:calc(100vh - 96px);overflow:auto}
+  .sidenav-title{font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 8px 10px}
+  .side-link{display:block;padding:6px 10px;border-radius:8px;color:var(--ink);font-size:13.5px;margin-bottom:2px}
+  .side-link:hover{background:var(--line2);text-decoration:none}
+  .side-link.active{background:var(--accent-bg);color:var(--accent);font-weight:600}
+
+  /* scenario table */
+  .scenario-sec{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px 8px;margin-bottom:26px}
+  h2{font-size:19px;margin:0 0 6px}
+  .hint{color:var(--muted);font-size:13px;margin:0 0 14px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  #scenario th{text-align:left;color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;
+    letter-spacing:.04em;border-bottom:1px solid var(--line);padding:8px 10px}
+  #scenario td{padding:9px 10px;border-bottom:1px solid var(--line2);vertical-align:top}
+  #scenario tr:hover{background:var(--accent-bg)}
+  .sc-cmd code{background:var(--code-bg);padding:2px 7px;border-radius:6px;font-size:12.5px;white-space:nowrap}
+  .sc-note{color:var(--muted)}
+  .sc-intent{width:40%}
+
+  /* category */
+  .cat{margin-bottom:26px;scroll-margin-top:78px}
+  .cat-h{font-size:20px;margin:0 0 2px;padding-top:8px;border-top:2px solid var(--ink);display:flex;align-items:baseline;gap:10px}
+  .cat-desc{font-size:12.5px;font-weight:400;color:var(--muted)}
+
+  /* card */
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;margin-top:12px;overflow:hidden;scroll-margin-top:78px}
+  .card-head{display:flex;align-items:center;gap:10px;padding:12px 16px;cursor:pointer;user-select:none}
+  .card-head:hover{background:var(--hover)}
+  .cname{font-size:15.5px;font-weight:700;letter-spacing:.01em;white-space:nowrap}
+  .cfull{font-size:12px;color:var(--muted);white-space:nowrap}
+  .cuse{flex:1;color:var(--muted);font-size:13.5px;min-width:0}
+  .lvl{font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap}
+  .lv-h{color:var(--lv-h);background:var(--lv-h-bg)}
+  .lv-m{color:var(--lv-m);background:var(--lv-m-bg)}
+  .lv-l{color:var(--lv-l);background:var(--lv-l-bg)}
+  .chev{color:var(--muted);transition:transform .18s;font-size:12px}
+  .card.open .chev{transform:rotate(90deg)}
+  .card-body{display:none;padding:2px 16px 16px;border-top:1px solid var(--line2)}
+  .card.open .card-body{display:block}
+
+  .row{margin:12px 0}
+  .k{display:inline-block;font-size:12px;color:var(--muted);min-width:38px;font-weight:600;margin-right:6px}
+  code.syntax,code.ex{background:var(--code-bg);padding:3px 8px;border-radius:6px;font-size:13px}
+  .copy{border:1px solid var(--line);background:var(--btnbg);color:var(--muted);border-radius:7px;padding:2px 9px;
+    font-size:11.5px;cursor:pointer;margin-left:6px;vertical-align:middle}
+  .copy:hover{border-color:var(--accent);color:var(--accent)}
+  .copy.done{color:var(--hi);border-color:var(--hi)}
+  table.sub{margin:8px 0;font-size:13px;border:1px solid var(--line2);border-radius:8px;overflow:hidden}
+  table.sub th{background:var(--hover);text-align:left;font-weight:600;color:var(--muted);font-size:12px;padding:6px 10px;border-bottom:1px solid var(--line)}
+  table.sub td{padding:6px 10px;border-bottom:1px solid var(--line2);vertical-align:top}
+  table.sub tr:last-child td{border-bottom:none}
+  table.sub td:first-child{white-space:nowrap}
+  ol.ex-list{list-style:none;padding:0;margin:6px 0}
+  ol.ex-list li{padding:5px 0;border-bottom:1px dashed var(--line2)}
+  ol.ex-list li:last-child{border-bottom:none}
+  ol.ex-list .d{color:var(--muted);font-size:12.5px;margin-left:8px}
+  ul.tips{margin:8px 0 0;padding:0;list-style:none}
+  ul.tips li{position:relative;padding:4px 0 4px 20px;font-size:13px}
+  ul.tips li::before{content:"▸";position:absolute;left:2px;color:var(--muted)}
+  .tsub{font-size:12px;font-weight:700;color:var(--muted);margin:14px 0 2px;text-transform:uppercase;letter-spacing:.04em}
+  .src{font-size:11.5px;color:var(--muted);margin-top:12px;border-top:1px solid var(--line2);padding-top:8px}
+
+  .toolbar{display:flex;gap:10px;align-items:center;margin:0 0 4px}
+  .toolbar button{border:1px solid var(--line);background:var(--btnbg);border-radius:8px;padding:5px 12px;font-size:12.5px;
+    color:var(--muted);cursor:pointer}
+  .toolbar button:hover{border-color:var(--accent);color:var(--accent)}
+  #empty{display:none;text-align:center;color:var(--muted);padding:40px 0;font-size:14px}
+  #gotop{position:fixed;right:22px;bottom:22px;display:none;border:1px solid var(--line);
+    background:var(--btnbg);border-radius:10px;padding:8px 14px;font-size:13px;color:var(--muted);cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+  #gotop:hover{color:var(--accent);border-color:var(--accent)}
+
+  @media (max-width:820px){
+    .layout{grid-template-columns:1fr;padding:14px}
+    .side{position:static;display:flex;flex-wrap:wrap;gap:4px;max-height:none;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:6px}
+    .sidenav-title{display:none}
+    .side-link{margin:0}
+    .sc-intent{width:auto}
+  }
+  @media print{
+    .topbar,.side,.toolbar,#gotop,.copy{display:none!important}
+    body{font-size:11px;background:#fff}
+    .layout{display:block;max-width:none;padding:0}
+    .card{break-inside:avoid;border-color:#ccc}
+    .card-body{display:block!important}
+  }
+</style>
+</head>
+<body>
+<nav class="sitenav"><div class="in">
+  <a class="logo" href="index.html">ROS 学习速查站</a>
+  <span class="sp"></span>
+  <a href="index.html">首页</a>
+  <a href="commands.html" class="active">命令速查</a>
+  <a href="cpp.html">C++ 语法</a>
+  <button id="themeToggle" class="themebtn" title="切换深色 / 浅色模式">🌙</button>
+</div></nav>
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">ROS / Ubuntu 命令速查字典<small>基于课程课件整理 · 场景反查 + 命令卡片</small></div>
+    <div class="searchwrap"><input id="q" type="search" placeholder="输入你想做的事或命令，中文也行：看开头 / 改权限 / ros2 topic / 编译" autocomplete="off"></div>
+    <div class="meta" id="meta"></div>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="side" id="side"></nav>
+  <main class="content">
+    <section class="scenario-sec" id="scenario-sec">
+      <h2>场景速查：我想做… → 用这个命令</h2>
+      <p class="hint">忘了命令叫什么？先在左边这张表里找你的“意图”，再到下面点开对应的命令卡片看细节。</p>
+      <table id="scenario">
+        <thead><tr><th class="sc-intent">我想做…</th><th>命令</th><th>说明</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </section>
+    <div class="toolbar">
+      <button id="expandAll">全部展开</button>
+      <button id="collapseAll">全部折叠</button>
+    </div>
+    <div id="cards"></div>
+    <div id="empty">没有匹配的条目，换个说法试试～</div>
+  </main>
+</div>
+<button id="gotop">↑ 顶部</button>
+
+<script>
+const DATA = {"categories": [{"id": "nav", "label": "文件与目录浏览", "desc": "看我在哪、目录里有什么、怎么切换"}, {"id": "view", "label": "文件内容查看", "desc": "把文件内容显示出来看"}, {"id": "manage", "label": "文件与目录管理", "desc": "新建、删除、复制、移动、改名"}, {"id": "perm", "label": "权限与用户", "desc": "改权限、切换用户、提权"}, {"id": "proc", "label": "文本查找与处理", "desc": "搜索内容、统计、排序、比较"}, {"id": "sys", "label": "软件包与系统", "desc": "装软件、看系统信息、进程"}, {"id": "editor", "label": "编辑器", "desc": "vi/vim、nano、gedit"}, {"id": "compile", "label": "编译与调试", "desc": "gcc/g++/make/gdb"}, {"id": "ros", "label": "ROS2 常用命令", "desc": "节点、话题、服务、参数、编译"}, {"id": "tips", "label": "终端技巧与快捷键", "desc": "让命令行更好用的小技巧"}], "scenarios": [{"intent": "看当前目录下有哪些文件", "cmd": "ls", "ref": "ls", "note": "加 -l 看详情，加 -a 看隐藏文件"}, {"intent": "看我现在处在哪个目录", "cmd": "pwd", "ref": "pwd", "note": "显示当前工作目录完整路径"}, {"intent": "进入某个目录 / 回到上一级 / 回主目录", "cmd": "cd 目标 / cd .. / cd ~", "ref": "cd", "note": "cd - 回到上一次的目录"}, {"intent": "看一个小文件的全部内容", "cmd": "cat 文件名", "ref": "cat", "note": "想看行号用 cat -n"}, {"intent": "看一个大文件的开头几行", "cmd": "head -n 20 文件名", "ref": "head", "note": "默认前 10 行"}, {"intent": "看一个日志文件的最新几行", "cmd": "tail -n 50 文件名", "ref": "tail", "note": "默认后 10 行"}, {"intent": "分页慢慢看一个大文件", "cmd": "less 文件名", "ref": "less", "note": "可用 PageUp/PageDown 前后翻"}, {"intent": "在屏幕上打印一句话 / 查看变量", "cmd": "echo \"文本\"", "ref": "echo", "note": "echo $PATH 看环境变量"}, {"intent": "看二进制文件里到底是什么字节", "cmd": "od -c 文件名", "ref": "od", "note": "-c 按字符、-b 按八进制"}, {"intent": "新建一个空文件", "cmd": "touch 文件名", "ref": "touch", "note": "文件已存在则只更新时间戳"}, {"intent": "删除一个文件", "cmd": "rm 文件名", "ref": "rm", "note": "加 -i 逐个确认，删了不可恢复"}, {"intent": "删除一个目录（连同里面所有东西）", "cmd": "rm -r 目录名", "ref": "rm", "note": "-rf 强制且不提示，慎用"}, {"intent": "新建一个目录（可一次建多层）", "cmd": "mkdir -p a/b/c", "ref": "mkdir", "note": "-p 自动创建上级目录"}, {"intent": "删除一个空目录", "cmd": "rmdir 目录名", "ref": "rmdir", "note": "非空目录删不掉，用 rm -r"}, {"intent": "复制文件 / 复制整个目录", "cmd": "cp 源 目标 / cp -r 源目录 目标", "ref": "cp", "note": "覆盖前想确认加 -i"}, {"intent": "给文件改名 / 把文件移动到别处", "cmd": "mv 源 目标", "ref": "mv", "note": "改名和移动是同一个命令"}, {"intent": "创建一个快捷方式（软链接）", "cmd": "ln -s 目标 链接名", "ref": "ln", "note": "-s 建符号链接"}, {"intent": "让一个文件可执行 / 改文件权限", "cmd": "chmod +x 文件 / chmod 755 文件", "ref": "chmod", "note": "改用数字 4读2写1执行 相加"}, {"intent": "用管理员权限执行一条命令", "cmd": "sudo 命令", "ref": "sudo", "note": "Ubuntu 24.04 root 默认锁定，用 sudo -i 进 root"}, {"intent": "切换到 root 用户", "cmd": "sudo -i", "ref": "su", "note": "24.04 下 su 切不过去，用 sudo -i"}, {"intent": "在文件里搜索某个关键词", "cmd": "grep 关键词 文件名", "ref": "grep", "note": "grep -rn 关键词 . 递归搜当前目录"}, {"intent": "按名字找文件在哪", "cmd": "find 路径 -name \"*.txt\"", "ref": "find", "note": "从指定路径往下找"}, {"intent": "统计文件有多少行 / 多少词", "cmd": "wc -l 文件名", "ref": "wc", "note": "-l 行、-w 词、-c 字节"}, {"intent": "把文件内容排序 / 去重", "cmd": "sort 文件名 / sort -u 文件名", "ref": "sort", "note": "sort -u 排序并去重"}, {"intent": "比较两个文件哪里不一样", "cmd": "diff 文件1 文件2", "ref": "diff", "note": "cmp 逐字节比较"}, {"intent": "安装一个软件包", "cmd": "sudo apt install 包名", "ref": "apt", "note": "装前先 sudo apt update"}, {"intent": "卸载一个软件包", "cmd": "sudo apt remove 包名", "ref": "apt", "note": "彻底清配置用 purge"}, {"intent": "更新软件源索引 / 升级已装软件", "cmd": "sudo apt update && sudo apt upgrade", "ref": "apt", "note": "update 拉索引，upgrade 升级"}, {"intent": "查看系统内核版本 / 用户名等系统信息", "cmd": "uname -r / whoami", "ref": "uname", "note": "uname -a 看全部信息"}, {"intent": "查看正在运行的进程 / 结束一个进程", "cmd": "ps aux 或 top / kill 进程号", "ref": "ps", "note": "top 实时看，kill -9 强杀"}, {"intent": "用 vi 编辑一个文件", "cmd": "vi 文件名", "ref": "vi", "note": "i 进入输入，Esc 回命令，:wq 保存退出"}, {"intent": "编译一个 C / C++ 程序", "cmd": "gcc 文件 -o 程序 / g++ 文件 -o 程序", "ref": "gcc", "note": "不加 -o 默认生成 a.out"}, {"intent": "编译时看到更多警告", "cmd": "gcc -Wall 文件 -o 程序", "ref": "gcc", "note": "配合 -g 生成调试信息"}, {"intent": "调试一个程序、设断点/单步", "cmd": "gdb ./程序", "ref": "gdb", "note": "先 break 设断点再 run"}, {"intent": "运行 ROS2 的一个节点", "cmd": "ros2 run 包名 节点名", "ref": "ros2 run", "note": "ROS2 不用先开 roscore"}, {"intent": "看 ROS2 里有哪些节点 / 话题 / 服务", "cmd": "ros2 node list / ros2 topic list / ros2 service list", "ref": "ros2 topic", "note": "加 info 看详情"}, {"intent": "手动往一个话题发一条消息", "cmd": "ros2 topic pub 话题 类型 \"{...}\"", "ref": "ros2 topic", "note": "--once 只发一次，--rate 持续发"}, {"intent": "查看一个 ROS2 消息/服务的字段结构", "cmd": "ros2 interface show 接口名", "ref": "ros2 interface", "note": ""}, {"intent": "记录/回放 ROS2 话题数据", "cmd": "ros2 bag record 话题 / ros2 bag play 目录", "ref": "ros2 bag", "note": "-a 录所有话题，-o 指定输出"}, {"intent": "编译 ROS2 工作空间", "cmd": "colcon build", "ref": "colcon", "note": "编译后 source install/setup.bash"}, {"intent": "创建一个新的 ROS2 功能包", "cmd": "ros2 pkg create --build-type ament_cmake 包名", "ref": "ros2 pkg", "note": "--dependencies 声明依赖"}], "commands": [{"id": "ls", "cat": "nav", "name": "ls", "full": "list", "use": "列出目录里的内容（有哪些文件和子目录）", "syntax": "ls [选项] [路径]", "level": "高频", "src": "Ubuntu课件", "opts": [["-l", "长格式：显示权限、所有者、大小、时间等详细信息"], ["-a", "显示全部文件，包括以 . 开头的隐藏文件"], ["-h", "把大小显示成易读的单位（K/M/G），常和 -l 一起用"], ["-t", "按修改时间排序（新的在前）"], ["-S", "按文件大小排序"], ["-R", "连同子目录一起递归列出"], ["-i", "显示 inode 节点号"], ["--color=auto", "是否用颜色区分类型（never/always/auto）"]], "examples": [{"c": "ls", "d": "列出当前目录内容"}, {"c": "ls -lh", "d": "长格式 + 易读大小，最常用组合"}, {"c": "ls -a", "d": "含隐藏文件（如 .bashrc）"}, {"c": "ls ~", "d": "列出主目录下的内容"}, {"c": "ls -lt", "d": "按时间排序，最近改动的排最前"}], "tips": ["想同时看详情和隐藏文件，习惯把选项合并写：ls -lah", "目录名/文件名打一半按 Tab 可自动补全，不怕记不全名字"], "tags": ["列出文件", "查看目录", "有哪些文件", "看文件夹里有什么", "目录内容", "显示文件列表"]}, {"id": "pwd", "cat": "nav", "name": "pwd", "full": "print working directory", "use": "显示当前所在的目录（我在哪）", "syntax": "pwd", "level": "高频", "src": "Ubuntu课件", "opts": [], "examples": [{"c": "pwd", "d": "输出当前工作目录的完整路径，例如 /home/columbus/dev_ws"}], "tips": ["路径迷路时先 pwd 一下，再配合 ls 看周围有什么"], "tags": ["当前目录", "我在哪", "显示路径", "当前路径", "工作目录"]}, {"id": "cd", "cat": "nav", "name": "cd", "full": "change directory", "use": "切换当前工作目录（去哪儿）", "syntax": "cd [目录]", "level": "高频", "src": "Ubuntu课件", "opts": [["..", "返回上一级目录"], ["~", "回到当前用户的主目录"], ["-", "回到上一次所在的目录"], ["/", "跳到根目录"]], "examples": [{"c": "cd dev_ws", "d": "进入当前目录下的 dev_ws 子目录（相对路径）"}, {"c": "cd ..", "d": "返回上一级"}, {"c": "cd ~", "d": "回到主目录"}, {"c": "cd -", "d": "在两个目录间来回跳，非常方便"}, {"c": "cd /home/columbus", "d": "用绝对路径进入"}], "tips": ["路径可以是绝对路径（从 / 开始）也可以是相对路径（从 . 或 .. 开始）", "目录名打一半按 Tab 自动补全，避免手打错"], "tags": ["切换目录", "进入目录", "回到上级", "去某个目录", "换目录", "cd ..", "回主目录"]}, {"id": "cat", "cat": "view", "name": "cat", "full": "concatenate", "use": "显示文件内容，也能把多个文件串接后重定向成新文件", "syntax": "cat [选项] [文件名]", "level": "高频", "src": "Ubuntu课件", "opts": [["-n", "对所有输出行编号（从 1 开始）"], ["-b", "和 -n 类似，但空白行不编号"], ["-s", "把连续多行空白行压缩成一行"], ["-E / -e", "在每行末尾显示 $ 符号"]], "examples": [{"c": "cat t1.txt", "d": "显示文件全部内容"}, {"c": "cat -n t1.txt", "d": "带行号显示"}, {"c": "cat t1.txt t2.txt >> t3.txt", "d": "把 t1、t2 的内容追加到 t3 末尾（t3 不存在会自动新建）"}, {"c": "cat > newfile.txt", "d": "从键盘输入内容写入新文件，按 Ctrl+D 结束输入"}], "tips": ["> 是覆盖重定向，>> 是追加重定向——用错 > 会清空原文件", "文件很大别用 cat，会刷屏刷到崩溃，改用 less"], "tags": ["查看文件内容", "显示文件", "输出文件内容", "合并文件", "拼接文件", "重定向", "看文件"]}, {"id": "more", "cat": "view", "name": "more", "full": "", "use": "分页显示文件内容，一屏一屏地看", "syntax": "more [文件名]", "level": "偶尔", "src": "Ubuntu课件", "opts": [["空格 / f", "显示下一页"], ["回车", "显示下一行"], ["q", "退出"], ["+num", "从第 num 行开始显示"]], "examples": [{"c": "more local_setup.sh", "d": "分页查看文件"}, {"c": "more +50 log.txt", "d": "从第 50 行开始看"}], "tips": ["more 只能往下翻，想前后自由翻页用 less"], "tags": ["分页查看", "一屏一屏看", "翻页看文件", "看大文件"]}, {"id": "less", "cat": "view", "name": "less", "full": "", "use": "分页显示文件，比 more 更强，可前后翻页、搜索", "syntax": "less [文件名]", "level": "高频", "src": "Ubuntu课件", "opts": [["-N", "每行前显示行号"], ["-m / -M", "显示读取进度百分比、总行数"], ["-s", "连续多个空白行只显示一行"], ["PageUp / PageDown", "向上 / 向下翻页"], ["/关键词", "在文件内向下搜索关键词"]], "examples": [{"c": "less /etc/manpath.config", "d": "分页打开配置文件"}, {"c": "less -N big.log", "d": "带行号查看大日志"}], "tips": ["看长文件首选 less；进入后按 q 退出，按 / 输入关键词后回车可搜索", "按 g 到文件首行，按 G 到文件末行"], "tags": ["分页查看", "翻页看文件", "看大文件", "搜索文件内容", "查看日志"]}, {"id": "head", "cat": "view", "name": "head", "full": "", "use": "显示文件开头几行（默认前 10 行）", "syntax": "head [选项] [文件名]", "level": "高频", "src": "Ubuntu课件", "opts": [["-n N", "显示前 N 行"], ["-c N", "显示前 N 个字节"]], "examples": [{"c": "head a.txt", "d": "看文件前 10 行"}, {"c": "head -n 20 a.txt", "d": "看前 20 行"}, {"c": "head -n -3 a.txt", "d": "除了最后 3 行，其余全显示"}, {"c": "head -c 20 b.cpp", "d": "看前 20 个字节"}], "tips": ["快速确认一个大文件的结构（比如日志开头）"], "tags": ["看开头", "前几行", "文件头部", "显示前面几行", "只看开头", "开头部分"]}, {"id": "tail", "cat": "view", "name": "tail", "full": "", "use": "显示文件结尾几行（默认后 10 行），看日志必用", "syntax": "tail [选项] [文件名]", "level": "高频", "src": "Ubuntu课件", "opts": [["-n N", "显示最后 N 行"], ["-f", "持续跟踪文件新增内容（看实时日志）"]], "examples": [{"c": "tail a.txt", "d": "看文件后 10 行"}, {"c": "tail -n 50 log.txt", "d": "看最后 50 行"}, {"c": "tail -f log.txt", "d": "实时滚动显示新写入的日志"}], "tips": ["看程序实时日志用 tail -f，按 Ctrl+C 退出"], "tags": ["看结尾", "后几行", "文件尾部", "看日志", "最新几行", "实时日志"]}, {"id": "echo", "cat": "view", "name": "echo", "full": "", "use": "在屏幕上输出一段文本（也常用来查看变量、写入文件）", "syntax": "echo [选项] 字符串", "level": "高频", "src": "Ubuntu课件", "opts": [["-n", "结尾不换行"], ["-e", "启用反斜杠转义（\\n 换行、\\a 响铃 等）"]], "examples": [{"c": "echo hello", "d": "输出一行文本"}, {"c": "echo -n hello", "d": "输出后不换行"}, {"c": "echo \"mm  oo pp\"", "d": "带引号，会保留中间的空格"}, {"c": "echo -e \"qq\\n dd\"", "d": "-e 让 \\n 生效，换行输出"}, {"c": "echo $PATH", "d": "查看环境变量 PATH 的值"}, {"c": "echo \"source /opt/ros/jazzy/setup.bash\" >> ~/.bashrc", "d": "把一行配置追加到 .bashrc"}], "tips": ["$ 开头的是变量名，echo $HOME 可看主目录路径"], "tags": ["输出文本", "打印", "显示文字", "查看变量", "写入文件", "环境变量"]}, {"id": "od", "cat": "view", "name": "od", "full": "octal dump", "use": "以八进制/十六进制等形式显示文件的字节，用于看无法直接显示的二进制文件", "syntax": "od [选项] 文件名", "level": "了解", "src": "Ubuntu课件", "opts": [["-a", "以 ASCII 码字符名显示"], ["-b", "以三位八进制数显示每个字节"], ["-c", "以 ASCII 字符或转义字符显示"], ["-d", "以无符号十进制显示"]], "examples": [{"c": "od -c hello.o", "d": "查看目标文件里的字节内容"}, {"c": "od -a file", "d": "按 ASCII 名字显示"}], "tips": ["二进制文件（如 .o 目标文件）用 cat 看是乱码，用 od 才看得懂字节"], "tags": ["二进制", "八进制", "十六进制", "查看字节", "乱码文件", "目标文件"]}, {"id": "tac", "cat": "view", "name": "tac", "full": "", "use": "把文件内容按行倒序显示（cat 反过来写就是它）", "syntax": "tac [文件名]", "level": "了解", "src": "Ubuntu课件", "opts": [], "examples": [{"c": "tac log.txt", "d": "从最后一行往前显示"}], "tips": ["名字就是 cat 倒过来，功能也是把行序倒过来"], "tags": ["倒序显示", "反过来看", "从后往前"]}, {"id": "touch", "cat": "manage", "name": "touch", "full": "", "use": "新建一个空文件，或修改文件的时间戳", "syntax": "touch [选项] 文件名", "level": "高频", "src": "Ubuntu课件", "opts": [["-a", "只更改存取时间"], ["-m", "只更改修改时间"], ["-c", "文件不存在时不新建"], ["-d 时间", "按 yyyymmdd 指定时间"], ["-r 参考文件", "把时间设成和参考文件一样"]], "examples": [{"c": "touch m1.doc", "d": "新建一个空文件 m1.doc"}, {"c": "touch a.txt b.txt", "d": "一次新建多个文件"}, {"c": "touch -r m1.doc m2.doc", "d": "把 m2 的时间改成和 m1 一样"}], "tips": ["文件已存在时不会覆盖，只更新时间戳"], "tags": ["新建文件", "创建空文件", "建立文件", "新建文本", "创建文件"]}, {"id": "rm", "cat": "manage", "name": "rm", "full": "remove", "use": "删除文件或目录（危险命令，删了不可恢复）", "syntax": "rm [选项] 文件或目录", "level": "高频", "src": "Ubuntu课件", "opts": [["-i", "删除前逐个询问确认"], ["-r / -R", "递归删除目录及其下面所有内容"], ["-f", "强制删除，不提示"], ["-rf", "递归 + 强制，最常用也最危险"]], "examples": [{"c": "rm m1.doc", "d": "删除一个文件"}, {"c": "rm -i m2.doc", "d": "删除前提示确认，防手误"}, {"c": "rm -i *.txt", "d": "删除所有 .txt（逐个确认）"}, {"c": "rm -r olddir", "d": "删除整个目录"}], "tips": ["Linux 没有回收站，rm 删掉就没了，无法恢复", "rm -rf / 会删光系统，网上无数惨案——敲 -rf 前一定先 ls 确认目标", "重要操作前先 ls 看清楚再删；拿不准就加 -i"], "tags": ["删除文件", "删除目录", "删掉", "移除", "删除文件夹", "rm -rf"]}, {"id": "mkdir", "cat": "manage", "name": "mkdir", "full": "make directory", "use": "新建目录（文件夹）", "syntax": "mkdir [选项] 目录名", "level": "高频", "src": "Ubuntu课件", "opts": [["-p", "需要时自动创建上级目录（可一次建多层）"], ["-m 权限", "建目录时按指定权限设置（如 700、755）"], ["-v", "显示创建过程"]], "examples": [{"c": "mkdir c-language", "d": "新建一个目录"}, {"c": "mkdir -p aaa/bbb", "d": "一次创建多级目录（aaa 不存在也能建）"}, {"c": "mkdir -p dev_ws/src", "d": "ROS2 工作空间就是这么建的"}, {"c": "mkdir -m 700 private", "d": "建目录并只为所有者开放权限"}], "tips": ["建工作空间/多级目录一定要加 -p，否则上级不存在会报错"], "tags": ["新建目录", "创建文件夹", "建立目录", "新建文件夹", "mkdir -p"]}, {"id": "rmdir", "cat": "manage", "name": "rmdir", "full": "remove directory", "use": "删除空目录（只删空目录）", "syntax": "rmdir [选项] 目录名", "level": "偶尔", "src": "Ubuntu课件", "opts": [["-p", "子目录删空后若父目录也空，一并删除"], ["-v", "显示详细步骤"]], "examples": [{"c": "rmdir bbb", "d": "删除空的 bbb 目录"}, {"c": "rmdir -p aaa/bbb", "d": "删掉 bbb，若 aaa 也空了则一起删"}], "tips": ["目录里有东西就删不掉，要用 rm -r；rmdir 只针对空目录，更安全"], "tags": ["删除空目录", "删文件夹", "移除目录", "删除目录"]}, {"id": "cp", "cat": "manage", "name": "cp", "full": "copy", "use": "复制文件或目录", "syntax": "cp [选项] 源 目标", "level": "高频", "src": "Ubuntu课件", "opts": [["-r / -R", "递归复制整个目录"], ["-i", "覆盖前询问确认"], ["-f", "强制覆盖"], ["-p", "保留原文件的属性（时间、权限等）"], ["-b", "覆盖前先给原文件做个备份"], ["-n", "不覆盖已存在的文件"]], "examples": [{"c": "cp t1.txt aa/bbb", "d": "把 t1.txt 复制到 aa/bbb 目录下"}, {"c": "cp t1.txt t2.txt", "d": "复制并改名"}, {"c": "cp -r folder1 folder2", "d": "递归复制整个目录"}, {"c": "cp -i t1.txt t2.txt", "d": "覆盖 t2 前先确认"}, {"c": "cp -b t1.txt t3.txt", "d": "覆盖 t3 前先备份成 t3~"}], "tips": ["复制目录必须加 -r，否则报错；担心覆盖就加 -i"], "tags": ["复制文件", "复制目录", "拷贝", "复制文件夹", "copy"]}, {"id": "mv", "cat": "manage", "name": "mv", "full": "move", "use": "移动文件/目录，或给文件改名", "syntax": "mv [选项] 源 目标", "level": "高频", "src": "Ubuntu课件", "opts": [["-i", "覆盖前询问"], ["-f", "强制覆盖，不提示"], ["-n", "不覆盖已存在的文件"], ["-v", "显示移动过程"], ["-u", "仅当源比目标新或目标不存在时才移动"]], "examples": [{"c": "mv t1.txt u1.txt", "d": "把文件改名（源和目标在同一目录就是改名）"}, {"c": "mv t1.txt pok", "d": "把 t1.txt 移动到 pok 目录"}, {"c": "mv -v t1.txt pok", "d": "移动并显示过程"}], "tips": ["改名和移动是同一个命令：目标位置不同就是移动，名字不同就是改名"], "tags": ["移动文件", "改名", "重命名", "挪动文件", "改名命令", "移动目录"]}, {"id": "ln", "cat": "manage", "name": "ln", "full": "link", "use": "创建链接——类似 Windows 的快捷方式（软链接）", "syntax": "ln [选项] 目标 链接名", "level": "偶尔", "src": "补充", "opts": [["-s", "创建符号链接（软链接），最常用"], ["-f", "强制创建，覆盖已存在的链接"]], "examples": [{"c": "ln -s /opt/ros/jazzy/setup.bash ros_setup", "d": "给长路径建个短名字的软链接"}, {"c": "ln -s ~/projects/myapp ~/桌面/myapp", "d": "在桌面建一个指向项目的快捷方式"}], "tips": ["不加 -s 建的是硬链接（同一份数据的另一个名字），日常几乎都用 -s 软链接"], "tags": ["快捷方式", "链接", "软链接", "创建快捷方式"]}, {"id": "chmod", "cat": "perm", "name": "chmod", "full": "change mode", "use": "修改文件或目录的读/写/执行权限", "syntax": "chmod [选项] 权限 文件", "level": "高频", "src": "Ubuntu课件", "opts": [["+x / -x", "给文件增加 / 去掉执行权限"], ["+r / -r", "增加 / 去掉读权限"], ["+w / -w", "增加 / 去掉写权限"], ["-R", "递归修改目录内所有文件"]], "examples": [{"c": "chmod +x run.sh", "d": "让脚本可执行（最常用）"}, {"c": "chmod 755 script.sh", "d": "所有者可读写执行，其他人只读+执行"}, {"c": "chmod 644 file.txt", "d": "所有者可读写，其他人只读"}, {"c": "chmod -R 755 mydir", "d": "递归设置整个目录"}], "tips": ["数字含义：读=4、写=2、执行=1，三位分别对应 所有者 / 同组 / 其他人", "755 = 4+2+1 / 4+1 / 4+1；644 是普通文件最常见权限"], "tables": [{"title": "常用权限数字对照", "headers": ["数字", "含义"], "rows": [["600", "只有所有者能读写"], ["644", "所有者读写，其他人只读（普通文件常用）"], ["700", "只有所有者能读写执行（私有目录）"], ["755", "所有者全权限，其他人读+执行（脚本/目录常用）"], ["777", "所有人都有全部权限（不安全，少用）"]]}], "tags": ["改权限", "设置权限", "可执行", "权限", "chmod 755", "文件权限"]}, {"id": "chown", "cat": "perm", "name": "chown", "full": "change owner", "use": "修改文件的所有者（属于谁）", "syntax": "chown [选项] 用户[:组] 文件", "level": "偶尔", "src": "Ubuntu课件", "opts": [["-R", "递归修改目录内所有文件"], ["用户:组", "同时修改所有者和所属组"]], "examples": [{"c": "sudo chown alice file.txt", "d": "把文件所有者改成 alice"}, {"c": "sudo chown -R alice:alice mydir", "d": "递归把目录及内容都改成 alice 所有"}], "tips": ["通常需要 sudo；改所有权是高风险操作，改前想清楚"], "tags": ["改所有者", "文件属主", "所有者", "归属"]}, {"id": "chgrp", "cat": "perm", "name": "chgrp", "full": "change group", "use": "修改文件所属的用户组", "syntax": "chgrp [选项] 组名 文件", "level": "了解", "src": "Ubuntu课件", "opts": [["-R", "递归修改"]], "examples": [{"c": "sudo chgrp developers file.txt", "d": "把文件所属组改成 developers"}], "tips": ["日常用得少，用 chown 用户:组 的方式更常见"], "tags": ["改用户组", "所属组", "用户组"]}, {"id": "su", "cat": "perm", "name": "su", "full": "switch user", "use": "切换到另一个用户（如 root）", "syntax": "su [选项] 用户名", "level": "偶尔", "src": "Ubuntu课件", "opts": [["-", "切换用户并切换工作环境（推荐）"], ["-c 命令", "以指定用户身份执行一条命令后返回"], ["-l", "如同重新登录一样切换环境"]], "examples": [{"c": "su - root", "d": "切换到 root 并加载其环境"}, {"c": "su - alice", "d": "切换到用户 alice"}], "tips": ["Ubuntu 24.04 默认锁定了 root 账户，su 切不过去，要用 sudo -i"], "tags": ["切换用户", "变成root", "切root", "用户切换"]}, {"id": "sudo", "cat": "perm", "name": "sudo", "full": "superuser do", "use": "以管理员（root）权限执行一条命令", "syntax": "sudo [选项] 命令", "level": "高频", "src": "Ubuntu课件", "opts": [["-i", "进入 root 交互式 shell（全局提权）"], ["-l", "列出当前用户可以执行的命令"], ["-k", "清除免密时间戳，下次要重新输密码"], ["-u 用户", "以指定用户身份执行"]], "examples": [{"c": "sudo apt update", "d": "以管理员权限更新软件源"}, {"c": "sudo -i", "d": "进入 root 环境（24.04 推荐用它代替 su）"}, {"c": "sudo reboot", "d": "重启系统"}], "tips": ["凡是“权限不够 / Permission denied”多半是差个 sudo", "sudo 只需输自己的密码，且短时间内免重复输入", "别养成所有命令都加 sudo 的习惯，容易误操作系统文件"], "tags": ["管理员权限", "提权", "权限不够", "root权限", "sudo"]}, {"id": "grep", "cat": "proc", "name": "grep", "full": "", "use": "在文件/输出里搜索包含某个关键词的行", "syntax": "grep [选项] 关键词 [文件]", "level": "高频", "src": "补充", "opts": [["-i", "忽略大小写"], ["-n", "显示匹配行的行号"], ["-r", "递归搜索整个目录"], ["-v", "显示不包含关键词的行"]], "examples": [{"c": "grep error log.txt", "d": "在日志中找含 error 的行"}, {"c": "grep -in error log.txt", "d": "忽略大小写并显示行号"}, {"c": "grep -rn \"TODO\" .", "d": "在当前目录所有文件里搜 TODO"}, {"c": "ls | grep txt", "d": "配合管道，只留下文件名含 txt 的"}], "tips": ["grep 是搜索内容，find 是搜索文件名，别搞混"], "tags": ["搜索关键词", "查找内容", "过滤", "搜文本", "查找字符串"]}, {"id": "find", "cat": "proc", "name": "find", "full": "", "use": "按文件名/属性在目录树里查找文件", "syntax": "find [路径] [条件]", "level": "偶尔", "src": "补充", "opts": [["-name \"模式\"", "按文件名匹配（支持通配符）"], ["-type f / d", "只找普通文件 / 只找目录"], ["-size +10M", "找大于 10M 的文件"]], "examples": [{"c": "find . -name \"*.cpp\"", "d": "在当前目录往下找所有 .cpp 文件"}, {"c": "find ~ -name \"*.ros\" 2>/dev/null", "d": "在主目录找 .ros 文件（隐藏报错）"}, {"c": "find . -type d -name build", "d": "找所有名为 build 的目录"}], "tips": ["find 按名字找文件，grep 按内容找文本；find 从路径往下递归"], "tags": ["找文件", "查找文件", "按名字找", "搜索文件名", "文件在哪"]}, {"id": "sort", "cat": "proc", "name": "sort", "full": "", "use": "把文本按行排序", "syntax": "sort [选项] [文件]", "level": "偶尔", "src": "Ubuntu课件", "opts": [["-n", "按数值大小排序"], ["-r", "倒序"], ["-u", "排序并去除重复行"]], "examples": [{"c": "sort names.txt", "d": "按字母顺序排列"}, {"c": "sort -n nums.txt", "d": "按数字大小排序"}, {"c": "sort -u names.txt", "d": "排序同时去重"}], "tips": ["默认按字符排序，数字排序记得加 -n，否则 10 会排在 2 前面"], "tags": ["排序", "按顺序排列", "文本框排序"]}, {"id": "uniq", "cat": "proc", "name": "uniq", "full": "", "use": "去除相邻的重复行（常与 sort 配合）", "syntax": "uniq [选项] [文件]", "level": "了解", "src": "Ubuntu课件", "opts": [["-c", "统计每行出现的次数"], ["-d", "只显示重复的行"], ["-u", "只显示不重复的行"]], "examples": [{"c": "sort names.txt | uniq", "d": "先去重（uniq 只能处理相邻重复，先 sort 一下）"}, {"c": "sort names.txt | uniq -c", "d": "统计每行出现次数"}], "tips": ["uniq 只对相邻的重复行生效，所以几乎总是先 sort 再 uniq"], "tags": ["去重", "去除重复", "统计次数"]}, {"id": "wc", "cat": "proc", "name": "wc", "full": "word count", "use": "统计文件的行数、词数、字节数", "syntax": "wc [选项] [文件]", "level": "偶尔", "src": "Ubuntu课件", "opts": [["-l", "统计行数（最常用）"], ["-w", "统计单词数"], ["-c", "统计字节数"]], "examples": [{"c": "wc -l test.c", "d": "看文件有多少行"}, {"c": "wc -l test.c test.i", "d": "对比预处理前后行数，体会头文件展开"}], "tips": ["比较 .c 和 .i 的行数，能直观看到 #include 展开了多少"], "tags": ["统计行数", "多少行", "计数", "统计字数", "行数统计"]}, {"id": "cut", "cat": "proc", "name": "cut", "full": "", "use": "按列/按分隔符剪切文本", "syntax": "cut [选项] [文件]", "level": "了解", "src": "Ubuntu课件", "opts": [["-c N", "按字符位置剪切"], ["-d 分隔符", "指定字段分隔符"], ["-f N", "取第 N 个字段"]], "examples": [{"c": "cut -d ':' -f 1 /etc/passwd", "d": "以冒号分隔，取第 1 列（用户名）"}], "tips": ["处理表格类文本（如 /etc/passwd、CSV）时很有用"], "tags": ["剪切列", "取某列", "按列提取", "分割文本"]}, {"id": "diff", "cat": "proc", "name": "diff", "full": "difference", "use": "逐行比较两个文件的差异", "syntax": "diff [选项] 文件1 文件2", "level": "偶尔", "src": "Ubuntu课件", "opts": [["-c", "以上下文格式显示差异"], ["-u", "统一格式（和 git diff 类似）"], ["-y", "左右并排显示"]], "examples": [{"c": "diff t1.txt t2.txt", "d": "比较两个文件哪里不同"}, {"c": "diff -y a.txt b.txt", "d": "并排对比"}], "tips": ["cmp 是逐字节比较（适合二进制），diff 是逐行比较（适合文本）"], "tags": ["比较文件", "差异", "对比两个文件", "找不同"]}, {"id": "apt", "cat": "sys", "name": "apt", "full": "Advanced Package Tool", "use": "Ubuntu 的软件包管理：安装、卸载、更新软件", "syntax": "sudo apt [install|remove|update|upgrade|search] 包名", "level": "高频", "src": "Ubuntu课件", "opts": [["update", "从软件源拉取最新的包索引（不装任何东西）"], ["upgrade", "升级已安装的软件包"], ["install 包名", "安装软件"], ["remove 包名", "卸载软件"], ["purge 包名", "卸载并清除配置文件"]], "examples": [{"c": "sudo apt update", "d": "更新源索引（装软件前先做）"}, {"c": "sudo apt install vim build-essential gdb", "d": "一次装多个（vi/gcc/g++/make/gdb）"}, {"c": "sudo apt install python3-colcon-common-extensions", "d": "装 ROS2 的 colcon 编译工具"}, {"c": "sudo apt remove 包名", "d": "卸载软件"}], "tips": ["Ubuntu 24.04 换源对象是 /etc/apt/sources.list.d/ubuntu.sources（旧的 sources.list 已弃用）", "用前先 sudo apt update，否则可能装到旧版本", "国内换镜像源（清华/阿里/华为等）可大幅提速"], "tables": [{"title": "Ubuntu 24.04 换源三步（deb822 新格式）", "headers": ["步骤", "做法"], "rows": [["1 备份", "sudo cp /etc/apt/sources.list.d/ubuntu.sources ~/ubuntu.sources.bak"], ["2 改源", "编辑 ubuntu.sources，把地址改成国内镜像（清华/阿里等）"], ["3 验证", "sudo apt update 不报错即成功"]]}], "tags": ["安装软件", "卸载软件", "更新软件", "装软件", "换源", "软件源", "apt"]}, {"id": "uname", "cat": "sys", "name": "uname", "full": "", "use": "显示系统信息（内核版本、架构等）", "syntax": "uname [选项]", "level": "偶尔", "src": "Ubuntu课件", "opts": [["-a", "显示全部信息"], ["-r", "只显示内核版本号（常用）"], ["-m", "显示硬件架构（x86_64 等）"]], "examples": [{"c": "uname -r", "d": "看内核版本，例如 6.8.0-xx-generic"}, {"c": "uname -a", "d": "看全部系统信息"}], "tips": ["装驱动/排查问题时经常要报内核版本，就是 uname -r"], "tags": ["系统信息", "内核版本", "系统版本", "查看系统"]}, {"id": "whoami", "cat": "sys", "name": "whoami", "full": "", "use": "显示当前登录的用户名", "syntax": "whoami", "level": "偶尔", "src": "Ubuntu课件", "opts": [], "examples": [{"c": "whoami", "d": "输出当前用户名，例如 columbus"}], "tips": ["不确定自己是普通用户还是 root 时，whoami 一下"], "tags": ["当前用户", "我是谁", "用户名", "登录用户"]}, {"id": "date", "cat": "sys", "name": "date", "full": "", "use": "显示或设置系统日期时间", "syntax": "date [选项]", "level": "了解", "src": "Ubuntu课件", "opts": [["+格式", "按指定格式输出，如 +%Y-%m-%d"]], "examples": [{"c": "date", "d": "显示当前日期时间"}, {"c": "date +%Y-%m-%d", "d": "只显示年月日，例如 2026-10-11"}], "tips": ["脚本里常用来生成带日期的时间戳"], "tags": ["日期", "时间", "当前时间"]}, {"id": "ps", "cat": "sys", "name": "ps", "full": "process status", "use": "查看当前运行的进程", "syntax": "ps [选项]", "level": "偶尔", "src": "补充", "opts": [["aux", "显示所有用户的所有进程（常用）"], ["-ef", "另一种显示全部进程的写法"]], "examples": [{"c": "ps aux", "d": "列出所有进程"}, {"c": "ps aux | grep ros2", "d": "筛出和 ros2 相关的进程"}], "tips": ["配合 grep 找特定进程；top 能实时刷新"], "tags": ["进程", "查看进程", "运行的程序", "查看程序"]}, {"id": "top", "cat": "sys", "name": "top", "full": "", "use": "实时查看系统资源和进程占用（CPU、内存）", "syntax": "top", "level": "偶尔", "src": "补充", "opts": [["q", "退出"], ["P", "按 CPU 占用排序"], ["M", "按内存占用排序"]], "examples": [{"c": "top", "d": "实时监视系统状态"}], "tips": ["按 q 退出；机器变卡时用它看是谁在吃 CPU"], "tags": ["实时进程", "资源占用", "cpu内存", "监视"]}, {"id": "kill", "cat": "sys", "name": "kill", "full": "", "use": "结束一个进程", "syntax": "kill [信号] 进程号(PID)", "level": "偶尔", "src": "补充", "opts": [["-9", "强制杀死进程"], ["-15", "默认，正常终止"]], "examples": [{"c": "kill 12345", "d": "结束进程号为 12345 的进程"}, {"c": "kill -9 12345", "d": "强制终止（普通 kill 杀不掉时用）"}], "tips": ["进程号用 ps 或 top 查；先试普通 kill，不行再 -9"], "tags": ["结束进程", "杀掉进程", "关闭程序", "终止"]}, {"id": "sleep", "cat": "sys", "name": "sleep", "full": "", "use": "暂停指定的秒数（脚本里延时用）", "syntax": "sleep 秒数", "level": "了解", "src": "Ubuntu课件", "opts": [], "examples": [{"c": "sleep 3", "d": "等待 3 秒"}], "tips": ["常写在脚本里，等某个服务启动起来再执行下一步"], "tags": ["延时", "等待", "暂停"]}, {"id": "vi", "cat": "editor", "name": "vi / vim", "full": "visual interface", "use": "字符界面上最常用的编辑器（vim 是其增强版），写代码改配置都用它", "syntax": "vi [文件名]", "level": "高频", "src": "Ubuntu课件", "opts": [["vi 文件名", "打开或新建文件"], ["vi +n 文件名", "打开并定位到第 n 行"], ["vi +/str 文件名", "打开并定位到第一个匹配 str 处"], ["vi -r 文件名", "崩溃后恢复文件"]], "examples": [{"c": "vi hello.cpp", "d": "打开/新建 hello.cpp"}, {"c": "vi manpath.config", "d": "编辑配置文件"}], "tables": [{"title": "三种模式怎么切换（记住：能打字先按 Esc）", "headers": ["模式", "作用", "怎么进", "怎么出"], "rows": [["命令行模式", "移动光标、删除复制，敲的键都是命令", "启动即进入 / 按 Esc", "—"], ["输入模式", "正常打字输入内容", "按 i / a / o（大写同理）", "按 Esc"], ["末行模式", "保存、退出、替换、设行号", "按 :", "命令执行后自动返回"]]}, {"title": "进入输入模式的按键", "headers": ["按键", "作用"], "rows": [["i", "在光标处插入"], ["a", "在光标后一个字符处插入"], ["o", "在光标下一行插入新行"], ["O", "在光标上一行插入新行"], ["I / A", "在行首 / 行尾插入"]]}, {"title": "删除 / 复制 / 粘贴（命令行模式）", "headers": ["按键", "作用"], "rows": [["x", "删除光标所在字符"], ["dd", "删除光标所在行"], ["yy", "复制光标所在行"], ["nyy", "复制从当前行起的 n 行（如 6yy 复制 6 行）"], ["p", "粘贴到光标处"], ["u", "撤销上一步"], [".", "重复上一步操作"]]}, {"title": "光标移动（命令行模式）", "headers": ["按键", "作用"], "rows": [["h j k l", "左 下 上 右（也可用方向键）"], ["0 / $", "到行首 / 行尾"], ["gg / G", "到文件首行 / 末行"], ["nG", "跳到第 n 行（如 65G 跳到第 65 行）"], ["Ctrl+f / Ctrl+b", "向下一页 / 上一页"]]}, {"title": "末行模式常用命令（先按 :）", "headers": ["命令", "作用"], "rows": [[":w", "保存"], [":q", "退出"], [":wq", "保存并退出（最常用）"], [":q!", "不保存强制退出"], [":set nu", "显示行号"], [":66,71s/man/MAN/gc", "第 66-71 行把 man 替换为 MAN，逐个确认"], [":w 新文件名", "另存为新文件"]]}], "tips": ["退出 vim 的口诀：Esc → :wq（保存退出）/ :q!（不保存退出），卡住时先连按几次 Esc 再敲冒号", "输入模式下无法保存退出，一定先按 Esc 回到命令行模式", "Ubuntu 24.04 默认只有 vim-tiny（功能不全），装完整版：sudo apt install vim", "崩溃恢复真有用：vi -r 文件名"], "tags": ["编辑器", "编辑文件", "改配置文件", "vim", "vi", "怎么退出", "保存退出", "写代码"]}, {"id": "nano", "cat": "editor", "name": "nano", "full": "", "use": "轻量级文本编辑器，比 vi 简单，快捷键直接显示在底部", "syntax": "nano [文件名]", "level": "偶尔", "src": "Ubuntu课件", "opts": [], "examples": [{"c": "nano hello.py", "d": "打开/新建文件，底部显示快捷键"}], "tips": ["底部 ^ 表示 Ctrl 键：Ctrl+O 保存、Ctrl+X 退出", "新手怕 vi 记不住命令时，nano 更省心"], "tags": ["简单编辑器", "编辑器", "nano", "改文件", "新手编辑器"]}, {"id": "gedit", "cat": "editor", "name": "gedit", "full": "", "use": "图形界面文本编辑器，像记事本一样点点鼠标就能编辑", "syntax": "gedit [文件名]", "level": "了解", "src": "Ubuntu课件", "opts": [], "examples": [{"c": "gedit hello.cpp", "d": "用图形界面打开文件编辑"}], "tips": ["可以在终端里敲 gedit 启动，也可以在软件搜索里搜 gedit", "Ubuntu 24.04 默认不装 gedit，默认图形编辑器叫“文本编辑器”", "纯终端环境（SSH）里用不了图形编辑器，只能用 vi/nano"], "tags": ["图形编辑器", "编辑器", "gedit", "记事本", "图形界面编辑"]}, {"id": "gcc", "cat": "compile", "name": "gcc", "full": "GNU Compiler Collection", "use": "编译 C 程序；也支持 C++（编译 C++ 一般用 g++）", "syntax": "gcc [选项] 源文件 -o 输出名", "level": "高频", "src": "Ubuntu课件 / C++课件", "opts": [["-o file", "指定输出的可执行文件名（不加则生成 a.out）"], ["-c", "只编译/汇编成 .o 目标文件，不链接"], ["-S", "只编译到汇编 .s 就停"], ["-E", "只做预处理，输出 .i"], ["-g", "生成调试信息（配合 gdb 用）"], ["-Wall", "打开所有常用警告（强烈建议加）"], ["-O0/-O1/-O2/-O3", "优化级别，越高运行越快但编译越慢"], ["-static", "强制静态链接"]], "examples": [{"c": "gcc hello.c -o hello", "d": "一步编译成可执行文件 hello"}, {"c": "gcc hello.c", "d": "不指定 -o 时生成 a.out"}, {"c": "gcc -Wall hello.c -o hello", "d": "带警告编译，养成好习惯"}, {"c": "gcc -E test.c -o test.i", "d": "只预处理，看头文件展开"}, {"c": "gcc -S test.i -o test.s", "d": "编译成汇编"}, {"c": "gcc -c test.s -o test.o", "d": "汇编成目标文件"}, {"c": "gcc test.o -o test", "d": "链接成可执行文件"}], "tables": [{"title": "编译四个阶段（一句话：预处理展开、编译翻译、汇编成码、链接成程序）", "headers": ["阶段", "选项", "产物", "干什么"], "rows": [["预处理", "-E", ".i", "展开 #include、替换 #define 宏"], ["编译", "-S", ".s", "把代码翻译成汇编（语法错误在这报）"], ["汇编", "-c", ".o", "把汇编变成机器码目标文件"], ["链接", "（无）", "可执行文件", "把多个 .o 和库拼成最终程序（undefined reference 出在这）"]]}], "tips": ["装 gcc/g++/make：sudo apt install build-essential", "查看是否装好：gcc --version", "开发阶段别开优化（-O），等软件发行时再对最终代码优化"], "tags": ["编译", "编译c程序", "生成可执行文件", "gcc", "编译代码", "a.out"]}, {"id": "gpp", "cat": "compile", "name": "g++", "full": "GNU C++ Compiler", "use": "编译 C++ 程序（默认按 C++ 处理并自动链接 C++ 标准库）", "syntax": "g++ [选项] 源文件 -o 输出名", "level": "高频", "src": "C++课件", "opts": [["-o file", "指定输出文件名"], ["-Wall", "打开常用警告"], ["-std=c++17", "指定 C++ 语言标准"], ["-g", "生成调试信息，配合 gdb"], ["-c / -S / -E", "与 gcc 相同：只汇编 / 只编译 / 只预处理"]], "examples": [{"c": "g++ hello.cpp -o hello", "d": "编译 C++ 程序"}, {"c": "g++ hello.cpp -o hello -Wall -std=c++17", "d": "带警告和标准版本的完整写法"}, {"c": "g++ -g hello.cpp -o hello", "d": "带调试信息，可 gdb 断点调试"}, {"c": "g++ -E hello.cpp -o hello.i", "d": "只预处理，看头文件展开成几百行"}], "tables": [{"title": "gcc 与 g++ 区别", "headers": ["", "gcc", "g++"], "rows": [["默认语言", "按 C 处理", "按 C++ 处理"], ["C++ 标准库", "不自动链接", "自动链接 libstdc++"], ["源文件后缀", ".c", ".cpp（头文件 .hpp/.h）"]]}], "tips": ["编译 C++ 用 g++ 最省事，不用自己手动链接标准库", "两者同属 GCC 套件，装 build-essential 就都有了"], "tags": ["编译c++", "编译cpp", "g++", "编译程序", "生成可执行"]}, {"id": "make", "cat": "compile", "name": "make", "full": "", "use": "按 Makefile 批量、自动化编译（只重编改动过的文件）", "syntax": "make [目标]", "level": "偶尔", "src": "ROS2课件", "opts": [["make", "执行 Makefile 里第一个目标（通常是编译）"], ["make clean", "执行清理（删除中间文件）"], ["make -f 文件名", "指定 Makefile"]], "examples": [{"c": "make", "d": "按当前目录的 Makefile 构建"}, {"c": "make clean", "d": "清理编译产生的文件"}], "tips": ["make 在当前目录找名为 Makefile 或 makefile 的文件", "Makefile 三要素：目标、依赖、命令", "工程大了手写 Makefile 麻烦，就用 CMake 生成 Makefile，再 make"], "tags": ["批量编译", "自动编译", "makefile", "构建", "编译工程"]}, {"id": "gdb", "cat": "compile", "name": "gdb", "full": "GNU Debugger", "use": "调试程序：设断点、单步执行、查看变量", "syntax": "gdb ./可执行文件（先用 gcc/g++ 加 -g 编译）", "level": "偶尔", "src": "Ubuntu课件", "opts": [["break / b", "设置断点"], ["run / r", "运行程序"], ["next / n", "单步执行（不进入函数）"], ["step / s", "单步执行（进入函数）"], ["print / p", "打印变量或表达式的值"], ["list / l", "列出源代码"], ["bt / where", "查看调用栈（程序崩在哪）"], ["watch", "监视变量何时改变"], ["set", "修改变量的值"], ["c", "继续执行到下一个断点"], ["quit", "退出 gdb"]], "examples": [{"c": "g++ -g bug.cpp -o bug", "d": "编译时加 -g 才有调试信息"}, {"c": "gdb ./bug", "d": "启动 gdb 调试 bug 程序"}, {"c": "break main", "d": "在 main 函数设断点"}, {"c": "run", "d": "运行到断点处停下"}, {"c": "print string", "d": "查看变量 string 的值"}], "tips": ["五步走完一次调试：编译加 -g → gdb ./程序 → break 设断点 → run 运行 → print/next 查看 → quit 退出", "编译时忘了加 -g，程序崩溃就看不到有用信息"], "tags": ["调试", "找bug", "断点", "单步", "调试程序", "gdb"]}, {"id": "cmake", "cat": "compile", "name": "cmake", "full": "", "use": "高级编译配置工具：用 CMakeLists.txt 生成 Makefile（跨平台）", "syntax": "cmake ..（在 build 目录里执行）", "level": "了解", "src": "ROS2课件", "opts": [["cmake ..", "用上一级目录的 CMakeLists.txt 生成 Makefile"]], "examples": [{"c": "mkdir build && cd build", "d": "建 build 目录（外部构建，推荐）"}, {"c": "cmake ..", "d": "生成 Makefile"}, {"c": "make", "d": "再执行 make 完成编译"}], "tips": ["cmake 自己不编译，只生成 Makefile，生成后还要 make", "推荐外部构建：把中间文件都放在 build 目录里，不污染源码", "ROS2 里不直接敲 cmake/make，用 colcon build 一步搞定"], "tags": ["cmake", "跨平台编译", "生成makefile", "构建系统", "cmakelists"]}, {"id": "ros2 run", "cat": "ros", "name": "ros2 run", "full": "", "use": "运行某个功能包里的一个节点", "syntax": "ros2 run [功能包名] [节点名]", "level": "高频", "src": "ROS2课件", "opts": [], "examples": [{"c": "ros2 run turtlesim turtlesim_node", "d": "启动小海龟仿真器"}, {"c": "ros2 run turtlesim turtle_teleop_key", "d": "键盘控制小海龟（另开一个终端）"}, {"c": "ros2 run demo_nodes_cpp talker", "d": "验证 ROS2 安装是否成功"}], "tips": ["ROS2 没有 Master 节点，不用先开 roscore！", "包名、节点名都能用 Tab 补全，双击 Tab 会列出所有候选", "工作空间的节点要先 source install/setup.bash 才能 run 到"], "tags": ["运行节点", "启动节点", "跑节点", "ros2 run", "启动程序"]}, {"id": "ros2 node", "cat": "ros", "name": "ros2 node", "full": "", "use": "查看正在运行的节点", "syntax": "ros2 node list / ros2 node info [节点名]", "level": "高频", "src": "ROS2课件", "opts": [["list", "列出当前所有节点"], ["info 节点名", "查看某节点发布了什么话题/服务/参数"]], "examples": [{"c": "ros2 node list", "d": "看现在有哪些节点在跑"}, {"c": "ros2 node info /turtlesim", "d": "看 turtlesim 节点的详细信息"}], "tips": ["ROS2 里所有节点地位平等，没有中心 Master 节点"], "tags": ["查看节点", "有哪些节点", "节点信息", "ros2 node"]}, {"id": "ros2 topic", "cat": "ros", "name": "ros2 topic", "full": "", "use": "查看和操作话题：列出、看类型、发消息、订阅", "syntax": "ros2 topic [list|info|echo|pub] ...", "level": "高频", "src": "ROS2课件", "opts": [["list", "列出所有活动话题"], ["info 话题名", "看话题的消息类型、发布者、订阅者"], ["echo 话题名", "打印某话题上流过的消息（订阅）"], ["pub 话题名 类型 \"{...}\"", "手动发布一条消息"]], "examples": [{"c": "ros2 topic list", "d": "列出活动话题"}, {"c": "ros2 topic echo /turtle1/pose", "d": "实时打印小海龟位姿"}, {"c": "ros2 topic pub --rate 10 /turtle1/cmd_vel geometry_msgs/msg/Twist \"{linear: {x: 2.0}, angular: {z: 0.0}}\"", "d": "以 10Hz 持续发布速度指令，让小海龟动起来"}], "tips": ["pub 命令行参数要一次写全（YAML 格式），不会进入交互模式", "--rate 10 表示每秒发 10 次；加 --once 只发一次", "话题上的消息类型用 ros2 interface show 看具体结构"], "tags": ["话题", "查看话题", "发布话题", "订阅话题", "发消息", "rosservice", "topic"]}, {"id": "ros2 service", "cat": "ros", "name": "ros2 service", "full": "", "use": "查看和调用服务（一问一答的同步通信）", "syntax": "ros2 service [list|info|call] ...", "level": "高频", "src": "ROS2课件", "opts": [["list", "列出所有活动服务"], ["info 服务名", "查看某服务的信息"], ["call 服务名 类型 \"{...}\"", "发送一次服务请求"]], "examples": [{"c": "ros2 service list", "d": "列出活动服务"}, {"c": "ros2 service call /spawn turtlesim/srv/Spawn \"{x: 3.0, y: 3.0, theta: 1.57, name: 'turtle2'}\"", "d": "请求生成第二只小海龟"}, {"c": "ros2 service call /turtle_command std_srvs/srv/Trigger \"{}\"", "d": "调用触发型服务"}], "tips": ["服务是“一次请求对应一次响应”，客户端请求时服务端必须已在运行", "命令行调用要一次写全参数（YAML 格式）", "ros2 service 和 ros2 interface 的区别：前者跟当前活跃服务交互，后者看接口的数据类型"], "tags": ["服务", "调用服务", "请求响应", "ros2 service", "服务器客户端"]}, {"id": "ros2 interface", "cat": "ros", "name": "ros2 interface", "full": "", "use": "查看消息/服务/动作的字段结构（.msg/.srv 定义了哪些字段）", "syntax": "ros2 interface [show|list] ...", "level": "偶尔", "src": "ROS2课件", "opts": [["show 接口名", "显示某接口的字段结构"], ["list", "列出所有可用接口"]], "examples": [{"c": "ros2 interface show geometry_msgs/msg/Twist", "d": "看 Twist 消息里有哪些字段（线速度/角速度）"}, {"c": "ros2 interface show turtlesim/srv/Spawn", "d": "看 Spawn 服务的请求和响应字段"}], "tips": ["发布话题前先 show 一下消息类型，就知道该怎么填参数了"], "tags": ["查看消息结构", "接口", "消息类型", "字段", "ros2 interface"]}, {"id": "ros2 param", "cat": "ros", "name": "ros2 param", "full": "parameter", "use": "查看/修改节点参数（节点内部的键值对配置）", "syntax": "ros2 param [list|get|set|dump|load|delete] ...", "level": "偶尔", "src": "ROS2课件", "opts": [["list", "列出所有参数（按节点分组）"], ["get 节点 参数名", "读取参数值"], ["set 节点 参数名 值", "修改参数值"], ["dump 节点 文件名", "把参数保存到 YAML 文件"], ["load 节点 文件名", "从 YAML 加载参数"]], "examples": [{"c": "ros2 param list", "d": "看有哪些参数"}, {"c": "ros2 param get /turtlesim background_r", "d": "读取背景色参数的当前值"}, {"c": "ros2 param set /turtlesim background_r 120", "d": "改背景色"}, {"c": "ros2 param dump /turtlesim params.yaml", "d": "把参数导出到文件"}], "tips": ["ROS2 参数不再是中心参数服务器，而是节点自己的属性（随节点创建/销毁）", "参数适合存静态的简单配置，不要用来传高频数据"], "tags": ["参数", "设置参数", "查看参数", "ros2 param", "节点配置"]}, {"id": "ros2 bag", "cat": "ros", "name": "ros2 bag", "full": "", "use": "录制话题数据到文件，之后再回放（类似录像机）", "syntax": "ros2 bag record [选项] 话题 / ros2 bag play [目录]", "level": "偶尔", "src": "ROS2课件", "opts": [["record 话题", "录制指定话题"], ["-a", "录制所有话题"], ["-o 前缀", "指定输出目录前缀"], ["play 目录", "回放录制的数据"]], "examples": [{"c": "ros2 bag record /turtle1/cmd_vel", "d": "录制小海龟的控制指令"}, {"c": "ros2 bag record -a -o mybag", "d": "录制所有话题，输出到 mybag 目录"}, {"c": "ros2 bag play mybag", "d": "回放录制的内容"}], "tips": ["录完按 Ctrl+C 停止，数据保存在一个目录里（rosbag2 格式）", "调试时很实用：录一次现场数据，之后反复回放分析"], "tags": ["录制数据", "回放", "录包", "ros2 bag", "rosbag", "录数据"]}, {"id": "ros2 pkg", "cat": "ros", "name": "ros2 pkg", "full": "package", "use": "创建、列出功能包（功能包是 ROS2 软件的基本单元）", "syntax": "ros2 pkg create --build-type ament_cmake [包名] [--dependencies 依赖...] / ros2 pkg list", "level": "偶尔", "src": "ROS2课件", "opts": [["create --build-type ament_cmake 包名", "创建 C++ 功能包"], ["create --build-type ament_python 包名", "创建 Python 功能包"], ["--dependencies a b c", "声明依赖的包"], ["list", "列出所有已安装的功能包"]], "examples": [{"c": "ros2 pkg create --build-type ament_cmake learning_topic --dependencies rclcpp geometry_msgs turtlesim", "d": "创建 learning_topic 包并声明依赖"}, {"c": "ros2 pkg list | grep learning", "d": "检查功能包是否创建成功"}], "tips": ["创建功能包要在工作空间的 src 目录里操作", "C++ 包用 ament_cmake（靠 CMakeLists.txt），Python 包用 ament_python（用 setup.py）"], "tags": ["功能包", "创建包", "新建功能包", "ros2 pkg", "package"]}, {"id": "colcon", "cat": "ros", "name": "colcon build", "full": "", "use": "编译整个 ROS2 工作空间（取代 ROS1 的 catkin_make）", "syntax": "colcon build [选项]（在工作空间根目录执行）", "level": "高频", "src": "ROS2课件", "opts": [["colcon build", "编译工作空间里所有功能包"], ["--packages-select 包名", "只编译指定包"], ["--symlink-install", "用软链接安装，改脚本不用重编，便于调试"]], "examples": [{"c": "cd ~/dev_ws && colcon build", "d": "编译工作空间"}, {"c": "colcon build --packages-select learning_topic", "d": "只编译一个包"}, {"c": "source install/setup.bash", "d": "编译后刷新环境，新节点才能被 ros2 run 找到"}], "tips": ["编译 → source → ros2 run，是每次改代码后的固定三步", "编译后会生成 build/（中间文件）install/（安装产物）log/（日志）三个目录", "把 source 写进 ~/.bashrc 就以后不用每次敲了"], "tags": ["编译", "构建", "colcon", "编译工作空间", "catkin_make", "colcon build"]}, {"id": "source", "cat": "ros", "name": "source setup.bash", "full": "", "use": "把 ROS2/工作空间的环境变量加载进当前终端", "syntax": "source /opt/ros/jazzy/setup.bash  或  source install/setup.bash", "level": "高频", "src": "ROS2课件", "opts": [], "examples": [{"c": "source /opt/ros/jazzy/setup.bash", "d": "加载 ROS2 系统环境"}, {"c": "source ~/dev_ws/install/setup.bash", "d": "加载自己工作空间的环境"}, {"c": "echo \"source /opt/ros/jazzy/setup.bash\" >> ~/.bashrc", "d": "写进 .bashrc，以后自动加载"}], "tips": ["新开一个终端如果找不到 ros2 命令，多半是忘了 source", "写进 ~/.bashrc 后就不用每次手动 source 了"], "tags": ["环境配置", "环境变量", "source", "setup.bash", "找不到ros2", "配置环境"]}, {"id": "rqt_graph", "cat": "ros", "name": "rqt_graph", "full": "", "use": "图形化查看节点、话题之间的连接关系", "syntax": "rqt_graph", "level": "偶尔", "src": "ROS2课件", "opts": [], "examples": [{"c": "rqt_graph", "d": "弹出窗口，显示节点与话题的连接图"}], "tips": ["排查“谁发布了、谁订阅了”时最直观的工具"], "tags": ["节点关系图", "可视化", "rqt_graph", "连接关系", "画图"]}, {"id": "ros2 launch", "cat": "ros", "name": "ros2 launch", "full": "", "use": "按 launch 文件一次启动多个节点（含参数配置）", "syntax": "ros2 launch [功能包] [launch文件]", "level": "偶尔", "src": "补充", "opts": [], "examples": [{"c": "ros2 launch 包名 demo.launch.py", "d": "启动该 launch 文件里定义的所有节点"}], "tips": ["节点多、要统一配参数时，用 launch 比一个个 ros2 run 方便得多"], "tags": ["启动多个节点", "launch", "批量启动", "ros2 launch"]}, {"id": "ros1vs2", "cat": "ros", "name": "ROS1→ROS2 命令对照", "full": "", "use": "本课程用 ROS2；如果你看到旧教程里的 ROS1 命令，对着这张表换一下", "syntax": "", "level": "了解", "src": "ROS2课件", "opts": [], "examples": [], "tables": [{"title": "ROS1 与 ROS2 常用命令对照", "headers": ["功能", "ROS1", "ROS2"], "rows": [["启动管理器", "roscore（必须先开）", "不需要（无 Master）"], ["运行节点", "rosrun 包 节点", "ros2 run 包 节点"], ["启动 launch", "roslaunch 包 xxx.launch", "ros2 launch 包 xxx.launch.py"], ["编译工作空间", "catkin_make", "colcon build"], ["查看节点", "rosnode list", "ros2 node list"], ["查看话题", "rostopic list", "ros2 topic list"], ["查看服务", "rosservice list", "ros2 service list"]]}], "tips": ["ROS2 不用 roscore，是最容易上手的一点；其余命令基本是加个 ros2 前缀"], "tags": ["ros1对比", "新旧命令", "roscore", "rosrun", "catkin_make", "版本区别"]}, {"id": "tab", "cat": "tips", "name": "Tab 键（自动补全）", "full": "", "use": "命令名、文件名、路径打一半按 Tab 自动补全，最省事的技巧", "syntax": "", "level": "高频", "src": "Ubuntu课件", "opts": [], "examples": [{"c": "ros2 ru<Tab>", "d": "自动补全成 ros2 run"}, {"c": "cd Doc<Tab>", "d": "补全文件夹名"}], "tips": ["按一下补全，按两下（双击）列出所有候选", "记不住命令/文件名时先打几个字母再猛按 Tab"], "tags": ["自动补全", "tab补全", "补全命令", "打字技巧"]}, {"id": "open_terminal", "cat": "tips", "name": "打开终端（Ctrl+Alt+T）", "full": "", "use": "快速打开一个新的终端窗口", "syntax": "", "level": "高频", "src": "ROS2课件", "opts": [], "examples": [{"c": "Ctrl + Alt + T", "d": "打开新终端"}], "tips": ["也可以在文件夹里右键选择“在终端打开”，直接定位到该目录"], "tags": ["打开终端", "新终端", "终端快捷键", "打开命令行"]}, {"id": "ctrlc", "cat": "tips", "name": "Ctrl+C / Ctrl+D", "full": "", "use": "中断当前正在运行的程序 / 结束键盘输入", "syntax": "", "level": "高频", "src": "Ubuntu课件", "opts": [["Ctrl+C", "中断当前运行的程序（如停掉 ros2 run 的节点）"], ["Ctrl+D", "结束键盘输入（如 cat 输入时）"]], "examples": [{"c": "Ctrl+C", "d": "结束正在刷屏的程序，回到命令提示符"}], "tips": ["程序卡住或刷屏停不下来，先按 Ctrl+C；注意它是中断，不是复制"], "tags": ["中断程序", "停止", "ctrl+c", "结束输入", "卡住"]}, {"id": "history", "cat": "tips", "name": "history / 上下箭头", "full": "", "use": "翻出之前敲过的命令，不用重新打", "syntax": "history", "level": "高频", "src": "补充", "opts": [["↑ / ↓", "在历史命令间上下翻"], ["history", "列出最近敲过的所有命令"], ["Ctrl+R", "反向搜索历史命令"]], "examples": [{"c": "history", "d": "看历史命令列表"}, {"c": "↑↑ Enter", "d": "按上箭头调出上一条命令直接回车"}], "tips": ["想重用刚敲过的长命令，按 ↑ 或 Ctrl+R 搜关键词，比重新敲快得多"], "tags": ["历史命令", "上一条命令", "翻历史", "history"]}, {"id": "help", "cat": "tips", "name": "man / --help", "full": "", "use": "查命令的官方用法和所有选项（忘了某个命令怎么用就查它）", "syntax": "man 命令   或   命令 --help", "level": "高频", "src": "ROS2课件", "opts": [["命令 --help", "快速看用法摘要"], ["man 命令", "看详细手册（按 q 退出）"]], "examples": [{"c": "ls --help", "d": "看 ls 的所有选项"}, {"c": "ros2 topic --help", "d": "看 ros2 topic 有哪些子命令"}, {"c": "man ls", "d": "查看 ls 的完整手册"}], "tips": ["任何命令基本都支持 --help，是最快的“随身字典”", "ROS2 里 ros2 [子命令] --help 能看到这一组命令的用法"], "tags": ["帮助", "怎么用", "手册", "查用法", "--help", "man"]}, {"id": "wildcard", "cat": "tips", "name": "通配符 * 与重定向 > / |", "full": "", "use": "批量处理文件和把输出接来接去的小语法", "syntax": "", "level": "偶尔", "src": "Ubuntu课件", "opts": [["*", "匹配任意多个字符，如 *.txt 匹配所有 txt 文件"], [">", "把输出写入文件（覆盖！）"], [">>", "把输出追加到文件末尾"], ["|", "管道：把前一个命令的输出交给下一个命令处理"]], "examples": [{"c": "rm -i *.txt", "d": "对所有 txt 文件执行删除（会逐个确认）"}, {"c": "ls | grep log", "d": "把 ls 的结果交给 grep 过滤，只看含 log 的"}, {"c": "cat a.txt >> b.txt", "d": "把 a 的内容追加到 b"}], "tips": ["> 是覆盖，>> 是追加，用错 > 会把原文件清空", "| 管道可以把两个命令拼起来，威力很大（如 ps aux | grep ros2）"], "tags": ["通配符", "星号", "重定向", "管道", "批量", "尖括号"]}]};
+const cats = DATA.categories, scenarios = DATA.scenarios, commands = DATA.commands;
+
+function levelClass(l){return l==="高频"?"lv-h":l==="偶尔"?"lv-m":"lv-l";}
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function slug(s){return "cmd-"+String(s).replace(/[^a-z0-9]+/gi,"-").toLowerCase();}
+function searchText(parts){return parts.join(" ").toLowerCase();}
+function cmdSearch(c){
+  var p=[c.name,c.full,c.use,c.syntax,c.level,(c.tags||[]).join(" ")];
+  (c.opts||[]).forEach(function(o){p.push(o[0]+" "+o[1]);});
+  (c.examples||[]).forEach(function(e){p.push(e.c+" "+e.d);});
+  (c.tips||[]).forEach(function(t){p.push(t);});
+  (c.tables||[]).forEach(function(tb){p.push(tb.title);(tb.rows||[]).forEach(function(r){p.push(r.join(" "));});});
+  return searchText(p);
+}
+
+/* side nav */
+var side=document.getElementById("side");
+side.innerHTML='<div class="sidenav-title">分类导航</div>'+cats.map(function(c){
+  return '<a class="side-link" data-cat="'+c.id+'" href="#cat-'+c.id+'">'+esc(c.label)+'</a>';
+}).join("");
+
+/* scenario table */
+var stb=document.querySelector("#scenario tbody");
+stb.innerHTML=scenarios.map(function(s){
+  var hay=searchText([s.intent,s.cmd,s.note]);
+  var link=s.ref?('<a href="#'+slug(s.ref)+'"><code>'+esc(s.cmd)+'</code></a>'):('<code>'+esc(s.cmd)+'</code>');
+  return '<tr data-search="'+esc(hay)+'"><td class="sc-intent">'+esc(s.intent)+'</td>'
+       + '<td class="sc-cmd">'+link+'<button class="copy" data-copy="'+esc(s.cmd)+'">复制</button></td>'
+       + '<td class="sc-note">'+esc(s.note||"")+'</td></tr>';
+}).join("");
+
+/* command cards, grouped by category */
+function optsTable(o){
+  if(!o||!o.length) return "";
+  return '<table class="sub"><thead><tr><th>选项/用法</th><th>说明</th></tr></thead><tbody>'
+    + o.map(function(r){return '<tr><td class="mono">'+esc(r[0])+'</td><td>'+esc(r[1])+'</td></tr>';}).join("")
+    + '</tbody></table>';
+}
+function genTable(tb){
+  return '<div class="tsub">'+esc(tb.title)+'</div><table class="sub"><thead><tr>'
+    + tb.headers.map(function(h){return '<th>'+esc(h)+'</th>';}).join("")
+    + '</tr></thead><tbody>'
+    + tb.rows.map(function(r){return '<tr>'+r.map(function(c){return '<td>'+esc(c)+'</td>';}).join("")+'</tr>';}).join("")
+    + '</tbody></table>';
+}
+function examples(el){
+  if(!el||!el.length) return "";
+  return '<div class="tsub">示例</div><ol class="ex-list">'
+    + el.map(function(e){return '<li><code class="ex">'+esc(e.c)+'</code>'
+        + '<button class="copy" data-copy="'+esc(e.c)+'">复制</button>'
+        + (e.d?'<span class="d">'+esc(e.d)+'</span>':"")+'</li>';}).join("")
+    + '</ol>';
+}
+function tipList(t){
+  if(!t||!t.length) return "";
+  return '<div class="tsub">易错点 / 提示</div><ul class="tips">'+t.map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ul>';
+}
+function cardHtml(c){
+  var h='<div class="card" id="'+slug(c.id)+'" data-search="'+esc(cmdSearch(c))+'">';
+  h+='<div class="card-head"><span class="cname mono">'+esc(c.name)+'</span>'
+   + (c.full?'<span class="cfull">'+esc(c.full)+'</span>':'')
+   + '<span class="cuse">'+esc(c.use)+'</span>'
+   + '<span class="lvl '+levelClass(c.level)+'">'+esc(c.level)+'</span>'
+   + '<span class="chev">▶</span></div>';
+  h+='<div class="card-body">';
+  if(c.syntax){h+='<div class="row"><span class="k">语法</span><code class="syntax">'+esc(c.syntax)+'</code></div>';}
+  h+=optsTable(c.opts);
+  (c.tables||[]).forEach(function(tb){h+=genTable(tb);});
+  h+=examples(c.examples);
+  h+=tipList(c.tips);
+  h+='<div class="src">来源：'+esc(c.src)+'　·　常用度：'+esc(c.level)+'</div>';
+  h+='</div></div>';
+  return h;
+}
+var wrap=document.getElementById("cards"), html="";
+cats.forEach(function(c){
+  var list=commands.filter(function(x){return x.cat===c.id;});
+  if(!list.length) return;
+  html+='<section class="cat" id="cat-'+c.id+'"><h2 class="cat-h">'+esc(c.label)+'<span class="cat-desc">'+esc(c.desc)+'</span></h2>';
+  list.forEach(function(cmd){html+=cardHtml(cmd);});
+  html+='</section>';
+});
+wrap.innerHTML=html;
+
+/* toggle */
+document.addEventListener("click",function(e){
+  var head=e.target.closest(".card-head");
+  if(head){head.parentElement.classList.toggle("open");return;}
+  var cp=e.target.closest(".copy");
+  if(cp){
+    var txt=cp.getAttribute("data-copy");
+    navigator.clipboard&&navigator.clipboard.writeText(txt).then(function(){
+      cp.classList.add("done");var old=cp.textContent;cp.textContent="已复制";
+      setTimeout(function(){cp.classList.remove("done");cp.textContent=old;},1100);
+    }).catch(function(){});
+    return;
+  }
+});
+
+/* toolbar */
+document.getElementById("expandAll").onclick=function(){document.querySelectorAll(".card").forEach(function(c){c.classList.add("open");});};
+document.getElementById("collapseAll").onclick=function(){document.querySelectorAll(".card").forEach(function(c){c.classList.remove("open");});};
+
+/* search */
+var q=document.getElementById("q"), meta=document.getElementById("meta"), empty=document.getElementById("empty");
+function runSearch(){
+  var toks=q.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  var searching=toks.length>0;
+  var shown=0;
+  document.querySelectorAll(".card").forEach(function(el){
+    var ok=!searching||toks.every(function(t){return el.getAttribute("data-search").indexOf(t)>=0;});
+    el.style.display=ok?"":"none";
+    if(searching){el.classList.toggle("open",ok);}
+    if(ok)shown++;
+  });
+  document.querySelectorAll("#scenario tbody tr").forEach(function(tr){
+    var ok=!searching||toks.every(function(t){return tr.getAttribute("data-search").indexOf(t)>=0;});
+    tr.style.display=ok?"":"none";
+  });
+  document.querySelectorAll(".cat").forEach(function(sec){
+    var any=Array.prototype.some.call(sec.querySelectorAll(".card"),function(c){return c.style.display!=="none";});
+    sec.style.display=any?"":"none";
+  });
+  var scsec=document.getElementById("scenario-sec");
+  var scAny=Array.prototype.some.call(document.querySelectorAll("#scenario tbody tr"),function(t){return t.style.display!=="none";});
+  scsec.style.display=scAny?"":"none";
+  if(searching){
+    meta.innerHTML="匹配 <b>"+shown+"</b> 条命令";
+    if(!shown&&!scAny)empty.style.display="block";else empty.style.display="none";
+  }else{
+    meta.innerHTML="共 <b>"+commands.length+"</b> 条命令 · "+scenarios.length+" 条场景";
+    empty.style.display="none";
+  }
+}
+q.addEventListener("input",runSearch);
+document.addEventListener("keydown",function(e){
+  if(e.key==="/"&&document.activeElement!==q){e.preventDefault();q.focus();}
+  if(e.key==="Escape"&&document.activeElement===q){q.value="";runSearch();q.blur();}
+});
+
+/* active nav highlight + gotop */
+var links=document.querySelectorAll(".side-link");
+window.addEventListener("scroll",function(){
+  document.getElementById("gotop").style.display=window.scrollY>400?"block":"none";
+  var y=window.scrollY+90,cur="";
+  document.querySelectorAll(".cat").forEach(function(sec){if(sec.style.display!=="none"&&sec.offsetTop<=y)cur=sec.id.replace("cat-","");});
+  links.forEach(function(l){l.classList.toggle("active",l.getAttribute("data-cat")===cur);});
+},{passive:true});
+document.getElementById("gotop").onclick=function(){window.scrollTo({top:0,behavior:"smooth"});};
+
+meta.innerHTML="共 <b>"+commands.length+"</b> 条命令 · "+scenarios.length+" 条场景";
+
+/* 主题切换 */
+var tt=document.getElementById("themeToggle");
+function syncThemeBtn(){tt.textContent=document.documentElement.getAttribute("data-theme")==="dark"?"☀️":"🌙";}
+syncThemeBtn();
+tt.onclick=function(){
+  var d=document.documentElement.getAttribute("data-theme")==="dark";
+  var n=d?"light":"dark";
+  document.documentElement.setAttribute("data-theme",n);
+  try{localStorage.setItem("theme",n);}catch(e){}
+  syncThemeBtn();
+};
+</script>
+</body>
+</html>
